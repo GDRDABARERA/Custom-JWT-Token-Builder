@@ -18,22 +18,16 @@
 
 package com.wso2.jwt.token.builder.internal;
 
+import com.wso2.jwt.token.builder.CustomJWTAccessTokenBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Component;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 
-/**
-* @scr.reference name="user.realmservice.default"
-*                interface="org.wso2.carbon.user.core.service.RealmService"
-*                cardinality="1..1" policy="dynamic" bind="setRealmService"
-*                unbind="unsetRealmService"
-* @scr.reference name="registry.service"
-*                interface="org.wso2.carbon.registry.core.service.RegistryService"
-*                cardinality="1..1" policy="dynamic" bind="setRegistryService"
-*                unbind="unsetRegistryService"
-*/
+@Component(name = "com.wso2.jwt.token.builder.internal.JWTAccessTokenBuilderDSComponent",
+        immediate = true)
 public class JWTAccessTokenBuilderDSComponent {
 
     private static Log log = LogFactory.getLog(JWTAccessTokenBuilderDSComponent.class);
@@ -42,6 +36,7 @@ public class JWTAccessTokenBuilderDSComponent {
 
     protected void activate(ComponentContext ctxt) {
         try {
+            ctxt.getBundleContext().registerService(CustomJWTAccessTokenBuilder.class, new CustomJWTAccessTokenBuilder(), null );
             log.info("Custom token builder activated successfully.");
         } catch (Exception e) {
             log.error("Failed to activate custom token builder ", e);
